@@ -1,7 +1,7 @@
 <?php
 /*
-Plugin Name: Scheduled Content
-Description: Allows you to make certain post or page content available only at scheduled periods via a simple shortcode.
+Plugin Name: Geplanter Inhalt
+Description: Ermöglicht es, bestimmte Post- oder Seiteninhalte nur zu festgelegten Zeiten über einen einfachen Shortcode verfügbar zu machen.
 Plugin URI: https://n3rds.work
 Version: 1.2.3
 Author: WPMS N@W
