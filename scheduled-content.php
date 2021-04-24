@@ -2,19 +2,18 @@
 /*
 Plugin Name: Scheduled Content
 Description: Allows you to make certain post or page content available only at scheduled periods via a simple shortcode.
-Plugin URI: https://premium.wpmudev.org/project/scheduled-content/
-Version: 1.2.2
-Author: WPMU DEV
-Author URI: https://premium.wpmudev.org/
-WDP ID: 215
+Plugin URI: https://n3rds.work
+Version: 1.2.3
+Author: WPMS N@W
+Author URI: https://n3rds.work
 Textdomain: sc
 */
 
 /*
-Copyright 2007-2016 Incsub (http://incsub.com)
+Copyright 2016-2021 WMS N@W (https://n3rds.work)
 
-Author: Aaron Edwards
-Contributors: Dharmendra Vekariya
+Author: DerN3rd
+Contributors: Dharmendra Vekariya, Aaron Edwards
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License (Version 2 - GPLv2) as published by
@@ -53,7 +52,7 @@ class ScheduledContent {
 				'post'
 			)
 		);
-		include_once( dirname( __FILE__ ) . '/includes/dash-notice/wpmudev-dash-notification.php' );
+
 	}
 
 	function localization() {
