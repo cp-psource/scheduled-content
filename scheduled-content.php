@@ -4,7 +4,7 @@ Plugin Name: Geplanter Inhalt
 Description: Ermöglicht es, bestimmte Post- oder Seiteninhalte nur zu festgelegten Zeiten über einen einfachen Shortcode verfügbar zu machen.
 Plugin URI: https://n3rds.work
 Version: 1.2.3
-Author: WPMS N@W
+Author: WMS N@W
 Author URI: https://n3rds.work
 Textdomain: sc
 */
