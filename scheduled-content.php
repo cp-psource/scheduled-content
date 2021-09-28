@@ -29,6 +29,13 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+require 'psource/psource-plugin-update/plugin-update-checker.php';
+$MyUpdateChecker = Puc_v4_Factory::buildUpdateChecker(
+	'https://n3rds.work//wp-update-server/?action=get_metadata&slug=scheduled-content', 
+	__FILE__, 
+	'scheduled-content' 
+);
+
 
 class ScheduledContent {
 
@@ -44,14 +51,6 @@ class ScheduledContent {
 		add_action( 'wp_ajax_scheduledTinymceOptions', array( &$this, 'tinymce_options' ) );
 		add_action( 'admin_init', array( &$this, 'load_tinymce' ) );
 
-		global $wpmudev_notices;
-		$wpmudev_notices[] = array(
-			'id'      => 215,
-			'name'    => 'Scheduled Content',
-			'screens' => array(
-				'post'
-			)
-		);
 
 	}
 
@@ -147,7 +146,7 @@ class ScheduledContent {
 
 		//set default closed messages
 		if ( ! $msg ) {
-			$msg = ( $onetime && $end <= $now ) ? __( "This content is not currently available.", 'sc' ) : __( "This content is not currently available. It will be available in:", 'sc' );	    			  	 		 				 
+			$msg = ( $onetime && $end <= $now ) ? __( "Dieser Inhalt ist derzeit nicht verfügbar.", 'sc' ) : __( "Dieser Inhalt ist derzeit nicht verfügbar. Es wird verfügbar sein in:", 'sc' );	    			  	 		 				 
 		}
 
 		//check cookie for password
@@ -173,7 +172,7 @@ class ScheduledContent {
 	var ' . $var . ' = new countdown("' . $var . '");
 	' . $var . '.Div			= "clock_' . $var . '";
 	' . $var . '.TargetDate		= "' . date( "m/d/Y g:i A", $start ) . $wpgmt . '";
-	' . $var . '.DisplayFormat	= "' . __( "%%D%% Days, %%H%% Hours, %%M%% Minutes, %%S%% Seconds", 'sc' ) . '";
+	' . $var . '.DisplayFormat	= "' . __( "%%D%% Tage, %%H%% Stunden, %%M%% Minuten, %%S%% Sekunden", 'sc' ) . '";
 	' . $var . '.Setup();
 </script>
 			';
@@ -208,11 +207,10 @@ class ScheduledContent {
 				 * TODO: We are including our own copy of tiny_mce_popup.js until this issue is resolved in the core file: https://core.trac.wordpress.org/ticket/41124
 				 */
 			?>
-            <script type="text/javascript"
-                    src="<?php echo plugins_url(dirname(plugin_basename(__FILE__)) . '/includes/tiny_mce_popup.js'); ?>">
+            <script type="text/javascript" src="<?php echo plugins_url(dirname(plugin_basename(__FILE__)) . '/includes/tiny_mce_popup.js'); ?>">
             </script>
-			<script type="text/javascript" src="../wp-includes/js/tinymce/utils/form_utils.js?ver=327-1235"></script>
-			<script type="text/javascript" src="../wp-includes/js/tinymce/utils/editable_selects.js?ver=327-1235"></script>
+			<script type="text/javascript" src="../wp-includes/js/tinymce/utils/form_utils.js"></script>
+			<script type="text/javascript" src="../wp-includes/js/tinymce/utils/editable_selects.js"></script>
 
 			<script type="text/javascript" src="../wp-includes/js/jquery/jquery.js"></script>
 
@@ -254,7 +252,7 @@ class ScheduledContent {
 							weekdays = weekdays + ',' + jQuery(this).val();
 						});
 						if (!weekdays) {
-							alert("<?php _e("You must select at least one weekday.", 'sc'); ?>");
+							alert("<?php _e("Du musst mindestens einen Wochentag auswählen.", 'sc'); ?>");
 							return false;
 						}
 						output += ' weekly="' + weekdays.substring(1) + '"';
@@ -290,29 +288,30 @@ class ScheduledContent {
 					vertical-align: top;
 					color: #777;
 					width: 150px;
+					font-size: 13px;
 				}
 			</style>
 
-			<title><?php _e( "Scheduled Content", 'sc' ); ?></title>
+			<title><?php _e( "Geplanter Inhalt", 'sc' ); ?></title>
 		</head>
 		<body style="display: none">
 		<form onsubmit="insertSchedule();return false;" action="#">
 
 			<div id="general_panel" class="panel current">
-				<fieldset>
+				<fieldset font-size="13px">
 					<table border="0" cellpadding="4" cellspacing="0">
 						<tr>
-							<td><label for="sc-type"><?php _e( "Schedule", 'sc' ); ?></label></td>
+							<td><label for="sc-type"><?php _e( "Zeitplan", 'sc' ); ?></label></td>
 							<td>
 								<select id="sc-type" name="sc-type">
-									<option value="monthly"><?php _e( "Monthly", 'sc' ); ?></option>
-									<option value="weekly"><?php _e( "Weekly", 'sc' ); ?></option>
-									<option value="onetime"><?php _e( "Onetime", 'sc' ); ?></option>
+									<option value="monthly"><?php _e( "Monatlich", 'sc' ); ?></option>
+									<option value="weekly"><?php _e( "Wöchentlich", 'sc' ); ?></option>
+									<option value="onetime"><?php _e( "Einmalig", 'sc' ); ?></option>
 								</select>
 							</td>
 						</tr>
 						<tr id="sc-monthly-row">
-							<td><label for="sc-monthdate"><?php _e( "Date", 'sc' ); ?></label></td>
+							<td><label for="sc-monthdate"><?php _e( "Datum", 'sc' ); ?></label></td>
 							<td>
 								<select id="sc-monthdate" name="sc-monthdate">
 									<?php
@@ -322,30 +321,30 @@ class ScheduledContent {
 									?>
 								</select>
 							</td>
-							<td class="info"><?php _e( "Choose the day of each month to display the content.", 'sc' ); ?></td>
+							<td class="info"><?php _e( "Wähle den Tag jedes Monats aus, um den Inhalt anzuzeigen.", 'sc' ); ?></td>
 						</tr>
 						<tr id="sc-weekly-row" style="display:none;">
-							<td><label for="sc-weekdays-0"><?php _e( "Weekdays", 'sc' ); ?></label></td>
+							<td><label for="sc-weekdays-0"><?php _e( "Wochentage", 'sc' ); ?></label></td>
 							<td>
 								<label><input type="checkbox" class="sc-weekdays" name="sc-weekdays[]"
-								              value="0"/><?php _e( "Sun.", 'sc' ); ?></label>
+								              value="0"/><?php _e( "So.", 'sc' ); ?></label>
 								<label><input type="checkbox" class="sc-weekdays" name="sc-weekdays[]"
-								              value="1"/><?php _e( "Mon.", 'sc' ); ?></label>
+								              value="1"/><?php _e( "Mo.", 'sc' ); ?></label>
 								<label><input type="checkbox" class="sc-weekdays" name="sc-weekdays[]"
-								              value="2"/><?php _e( "Tues.", 'sc' ); ?></label><br/>
+								              value="2"/><?php _e( "Di.", 'sc' ); ?></label><br/>
 								<label><input type="checkbox" class="sc-weekdays" name="sc-weekdays[]"
-								              value="3"/><?php _e( "Wed.", 'sc' ); ?></label>
+								              value="3"/><?php _e( "Mi.", 'sc' ); ?></label>
 								<label><input type="checkbox" class="sc-weekdays" name="sc-weekdays[]"
-								              value="4"/><?php _e( "Thurs.", 'sc' ); ?></label>
+								              value="4"/><?php _e( "Do.", 'sc' ); ?></label>
 								<label><input type="checkbox" class="sc-weekdays" name="sc-weekdays[]"
-								              value="5"/><?php _e( "Fri.", 'sc' ); ?></label><br/>
+								              value="5"/><?php _e( "Fr.", 'sc' ); ?></label><br/>
 								<label><input type="checkbox" class="sc-weekdays" name="sc-weekdays[]"
-								              value="6"/><?php _e( "Sat.", 'sc' ); ?></label>
+								              value="6"/><?php _e( "Sa.", 'sc' ); ?></label>
 							</td>
-							<td class="info"><?php _e( "Choose what days of each week to display the content.", 'sc' ); ?></td>
+							<td class="info"><?php _e( "Wähle aus, an welchen Wochentagen der Inhalt angezeigt werden soll.", 'sc' ); ?></td>
 						</tr>
 						<tr id="sc-onetime-row" style="display:none;">
-							<td><label for="sc-date"><?php _e( "Onetime Date", 'sc' ); ?></label></td>
+							<td><label for="sc-date"><?php _e( "Einmaliges Datum", 'sc' ); ?></label></td>
 							<td>
 								<select id="sc-year" name="sc-year">
 									<?php
@@ -373,7 +372,7 @@ class ScheduledContent {
 									?>
 								</select>
 							</td>
-							<td class="info"><?php _e( "Choose the onetime date to display the content.", 'sc' ); ?></td>
+							<td class="info"><?php _e( "Wähle das einmalige Datum, um den Inhalt anzuzeigen.", 'sc' ); ?></td>
 						</tr>
 					</table>
 				</fieldset>
@@ -381,7 +380,7 @@ class ScheduledContent {
 				<fieldset>
 					<table border="0" cellpadding="4" cellspacing="0">
 						<tr>
-							<td><label for="sc-hours"><?php _e( "Open Time", 'sc' ); ?></label></td>
+							<td><label for="sc-hours"><?php _e( "Offene Zeit", 'sc' ); ?></label></td>
 							<td>
 								<select id="sc-hours" name="sc-hours">
 									<?php
@@ -404,13 +403,13 @@ class ScheduledContent {
 									<option value="PM"><?php _e( "PM", 'sc' ); ?></option>
 								</select><br/>
 								<label id="sc-utcoffset"><input type="checkbox" name="wptime"
-								                                id="wptime"><?php _e( "Use WordPress Time Instead of GMT", 'sc' ); ?>
+								                                id="wptime"><?php _e( "Verwende WordPress-Zeit anstelle von GMT", 'sc' ); ?>
 								</label>
 							</td>
-							<td class="info"><?php _e( "Choose the time you want to begin displaying the content.", 'sc' ); ?></td>
+							<td class="info"><?php _e( "Wähle die Zeit aus, zu der Du mit der Anzeige des Inhalts beginnen möchtest.", 'sc' ); ?></td>
 						</tr>
 						<tr>
-							<td><label for="sc-date"><?php _e( "Open Length", 'sc' ); ?></label></td>
+							<td><label for="sc-date"><?php _e( "Offene Länge", 'sc' ); ?></label></td>
 							<td>
 								<label><select id="sc-lyears" name="sc-lyears">
 										<?php
@@ -418,14 +417,14 @@ class ScheduledContent {
 											echo '<option value="' . $i . '">' . $i . '</option>';
 										}
 										?>
-									</select> <?php _e( "Year(s)", 'sc' ); ?></label>
+									</select> <?php _e( "Jahr(e)", 'sc' ); ?></label>
 								<label><select id="sc-ldays" name="sc-ldays">
 										<?php
 										for ( $i = 0; $i <= 364; $i ++ ) {
 											echo '<option value="' . $i . '">' . $i . '</option>';
 										}
 										?>
-									</select> <?php _e( "Day(s)", 'sc' ); ?></label><br/>
+									</select> <?php _e( "Tag(e)", 'sc' ); ?></label><br/>
 								<label><select id="sc-lhours" name="sc-lhours">
 										<?php
 										for ( $i = 0; $i <= 23; $i ++ ) {
@@ -433,24 +432,24 @@ class ScheduledContent {
 											echo '<option value="' . $i . '"' . $selected . '>' . $i . '</option>';
 										}
 										?>
-									</select> <?php _e( "Hour(s)", 'sc' ); ?></label>
+									</select> <?php _e( "Stunde(n)", 'sc' ); ?></label>
 								<label><select id="sc-lmins" name="sc-lmins">
 										<?php
 										for ( $i = 0; $i <= 59; $i ++ ) {
 											echo '<option value="' . $i . '">' . $i . '</option>';
 										}
 										?>
-									</select> <?php _e( "Min", 'sc' ); ?></label>
+									</select> <?php _e( "Minuten", 'sc' ); ?></label>
 							</td>
-							<td class="info"><?php _e( "Choose how long to display the content.", 'sc' ); ?></td>
+							<td class="info"><?php _e( "Wähle aus, wie lange der Inhalt angezeigt werden soll.", 'sc' ); ?></td>
 						</tr>
 						<tr>
-							<td><label for="sc-msg"><?php _e( "Message", 'sc' ); ?></label></td>
+							<td><label for="sc-msg"><?php _e( "Nachricht", 'sc' ); ?></label></td>
 							<td>
 								<label><input type="text" id="sc-msg" name="sc-msg" value="" style="width:100%"/></label>
 							</td>
 							<td
-								class="info"><?php _e( "Optional - This message displays when the content is not available.", 'sc' ); ?></td>
+								class="info"><?php _e( "Optional – Diese Meldung wird angezeigt, wenn der Inhalt nicht verfügbar ist.", 'sc' ); ?></td>
 						</tr>
 					</table>
 				</fieldset>
@@ -458,12 +457,12 @@ class ScheduledContent {
 
 			<div class="mceActionPanel">
 				<div style="float: left">
-					<input type="button" id="cancel" name="cancel" value="<?php esc_attr_e( "Cancel", 'sc' ); ?>"
+					<input type="button" id="cancel" name="cancel" value="<?php esc_attr_e( "Abbrechen", 'sc' ); ?>"
 					       onclick="tinyMCEPopup.close();"/>
 				</div>
 
 				<div style="float: right">
-					<input type="submit" id="insert" name="insert" value="<?php esc_attr_e( "Insert", 'sc' ); ?>"/>
+					<input type="submit" id="insert" name="insert" value="<?php esc_attr_e( "Einfügen", 'sc' ); ?>"/>
 				</div>
 			</div>
 		</form>
